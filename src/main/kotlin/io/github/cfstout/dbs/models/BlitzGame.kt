@@ -28,6 +28,17 @@ class BlitzGame(
         printRoundDetails(blitzes, points, roundScores)
     }
 
+    fun printWinners() {
+        val winners = totalScores.filter { it.value >= pointsToWin }
+        if (winners.size == 1) {
+            val winner = winners.values.first()
+            println("${playerNames[winner]} wins!")
+        } else {
+            println("It's a tie!")
+            winners.forEach { println("${playerNames[it.value]}: ${totalScores[it.value]}") }
+        }
+    }
+
     private fun promptForPlayerNames(): Map<Int, String> {
         val playerNameInput = mutableMapOf<Int, String>()
         for (i in 1..numberOfPlayers) {
@@ -74,7 +85,7 @@ class BlitzGame(
         for (i in 1..numberOfPlayers) {
             println(
                 "${playerNames[i]} got ${points[i]} points and had ${blitzes[i]} in the blitz pile giving them a " +
-                    "score this round of ${roundScores[i]}. Total: ${totalScores[i]}",
+                        "score this round of ${roundScores[i]}. Total: ${totalScores[i]}",
             )
         }
     }
