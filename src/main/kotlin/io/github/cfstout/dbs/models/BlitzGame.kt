@@ -31,11 +31,11 @@ class BlitzGame(
     fun printWinners() {
         val winners = totalScores.filter { it.value >= pointsToWin }
         if (winners.size == 1) {
-            val winner = winners.values.first()
+            val winner = winners.entries.first().key
             println("${playerNames[winner]} wins!")
         } else {
             println("It's a tie!")
-            winners.forEach { println("${playerNames[it.value]}: ${totalScores[it.value]}") }
+            winners.forEach { println("${playerNames[it.key]}: ${totalScores[it.key]}") }
         }
     }
 
