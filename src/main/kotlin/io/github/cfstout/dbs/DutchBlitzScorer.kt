@@ -9,6 +9,7 @@ import com.natpryce.konfig.intType
 import com.natpryce.konfig.overriding
 import com.zaxxer.hikari.HikariDataSource
 import freemarker.cache.ClassTemplateLoader
+import freemarker.template.TemplateNotFoundException
 import io.github.cfstout.dbs.config.DbsConfig
 import io.github.cfstout.dbs.config.buildHikariConfig
 import io.github.cfstout.dbs.config.fromDirectory
@@ -83,6 +84,10 @@ object DutchBlitzScorer {
                         logger.error("Unhandled exception", it)
                         call.respond(HttpStatusCode.InternalServerError)
                     }
+                    exception<TemplateNotFoundException> {
+                        logger.warn("Template ${it.templateName} not found")
+                        call.respond(HttpStatusCode.NotFound, "Template ${it.templateName} not found")
+                    }
                     exception<JsonProcessingException> { t ->
                         logger.warn("Bad request json", t)
                         call.respond(HttpStatusCode.BadRequest, "Invalid JSON")
@@ -90,13 +95,13 @@ object DutchBlitzScorer {
                 }
 
                 install(FreeMarker) {
-                    templateLoader = ClassTemplateLoader(this::class.java.classLoader, "templates")
+                    templateLoader = ClassTemplateLoader(this::class.java.classLoader, "/templates")
                 }
 
                 routing {
                     get("/") {
                         val model = mapOf("user" to "Ktor User")
-                        call.respond(FreeMarkerContent("example.ftl", model))
+                        call.respond(FreeMarkerContent("examples.ftl", model))
                     }
                 }
 
