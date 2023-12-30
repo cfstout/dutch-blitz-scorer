@@ -101,7 +101,11 @@ object DutchBlitzScorer {
                 routing {
                     get("/") {
                         val model = mapOf("user" to "Ktor User")
-                        call.respond(FreeMarkerContent("examples.ftl", model))
+                        call.respond(FreeMarkerContent("main.ftl", model))
+                    }
+                    get("/start-game") {
+                        val model = mapOf<String, String>()
+                        call.respond(FreeMarkerContent("new_game.ftl", model))
                     }
                 }
 
