@@ -1,4 +1,4 @@
-package io.github.cfstout.dbs.models
+package io.github.cfstout.dutchblitz.models
 
 class BlitzGame(
     val pointsToWin: Int,
@@ -85,7 +85,7 @@ class BlitzGame(
         for (i in 1..numberOfPlayers) {
             println(
                 "${playerNames[i]} got ${points[i]} points and had ${blitzes[i]} in the blitz pile giving them a " +
-                        "score this round of ${roundScores[i]}. Total: ${totalScores[i]}",
+                    "score this round of ${roundScores[i]}. Total: ${totalScores[i]}",
             )
         }
     }

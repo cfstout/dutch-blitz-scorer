@@ -6,7 +6,7 @@ plugins {
     id("nu.studer.jooq") version "4.1"
 }
 
-group = "io.github.cfstout.hersko-server"
+group = "io.github.cfstout.dutchblitz"
 version = "1.0-SNAPSHOT"
 
 repositories {

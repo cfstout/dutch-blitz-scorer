@@ -1,4 +1,4 @@
-package io.github.cfstout.dbs
+package io.github.cfstout.dutchblitz
 
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.natpryce.konfig.Configuration
@@ -10,10 +10,10 @@ import com.natpryce.konfig.overriding
 import com.zaxxer.hikari.HikariDataSource
 import freemarker.cache.ClassTemplateLoader
 import freemarker.template.TemplateNotFoundException
-import io.github.cfstout.dbs.config.DbsConfig
-import io.github.cfstout.dbs.config.buildHikariConfig
-import io.github.cfstout.dbs.config.fromDirectory
-import io.github.cfstout.dbs.models.BlitzGame
+import io.github.cfstout.dutchblitz.config.DbsConfig
+import io.github.cfstout.dutchblitz.config.buildHikariConfig
+import io.github.cfstout.dutchblitz.config.fromDirectory
+import io.github.cfstout.dutchblitz.models.BlitzGame
 import io.ktor.application.call
 import io.ktor.application.feature
 import io.ktor.application.install
@@ -118,7 +118,8 @@ object DutchBlitzScorer {
                 logger.info("Startup time: ${Duration.between(start, Instant.now()).toMillis()}ms")
             }
         warmupPool.shutdown()
-        server.start(/*wait = true*/)
+        // wait = true
+        server.start()
         val game =
             BlitzGame(
                 pointsToWin = dbsConfig.pointsToWin,

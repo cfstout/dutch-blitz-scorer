@@ -1,4 +1,4 @@
-package io.github.cfstout.dbs.config
+package io.github.cfstout.dutchblitz.config
 
 import com.natpryce.konfig.Configuration
 import com.natpryce.konfig.Key
