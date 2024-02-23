@@ -7,11 +7,9 @@ import com.natpryce.konfig.EnvironmentVariables
 import com.natpryce.konfig.Key
 import com.natpryce.konfig.intType
 import com.natpryce.konfig.overriding
-import com.zaxxer.hikari.HikariDataSource
 import freemarker.cache.ClassTemplateLoader
 import freemarker.template.TemplateNotFoundException
 import io.github.cfstout.dutchblitz.config.DbsConfig
-import io.github.cfstout.dutchblitz.config.buildHikariConfig
 import io.github.cfstout.dutchblitz.config.fromDirectory
 import io.github.cfstout.dutchblitz.models.BlitzGame
 import io.ktor.application.call
@@ -30,13 +28,12 @@ import io.ktor.routing.get
 import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
-import org.jooq.SQLDialect
-import org.jooq.impl.DSL
 import org.slf4j.LoggerFactory
 import org.slf4j.event.Level
 import java.nio.file.Path
 import java.time.Duration
 import java.time.Instant
+import java.util.UUID
 import java.util.concurrent.Callable
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
@@ -57,15 +54,15 @@ object DutchBlitzScorer {
             )
 
         val config = EnvironmentVariables() overriding ConfigurationProperties.fromDirectory(configDir)
-        val jooqFuture =
-            warmupPool.submit(
-                Callable {
-                    DSL.using(
-                        HikariDataSource(buildHikariConfig(config, "DB_")),
-                        SQLDialect.POSTGRES,
-                    )
-                },
-            )
+//        val jooqFuture =
+//            warmupPool.submit(
+//                Callable {
+//                    DSL.using(
+//                        HikariDataSource(buildHikariConfig(config, "DB_")),
+//                        SQLDialect.POSTGRES,
+//                    )
+//                },
+//            )
         val dbsConfigFuture: Future<DbsConfig> =
             warmupPool.submit(
                 Callable {
@@ -103,9 +100,18 @@ object DutchBlitzScorer {
                         val model = mapOf("user" to "Ktor User")
                         call.respond(FreeMarkerContent("main.ftl", model))
                     }
-                    get("/start-game") {
+                    get("/game/new") {
                         val model = mapOf<String, String>()
                         call.respond(FreeMarkerContent("new_game.ftl", model))
+                    }
+                    get("/game/id/{gameId}") {
+                        val gameId = UUID.fromString(call.parameters["gameId"])
+                        if (gameId == null) {
+                            call.respond(HttpStatusCode.BadRequest, "Invalid game id")
+                        } else {
+                            val model = mapOf<String, String>()
+                            call.respond(FreeMarkerContent("game.ftl", model))
+                        }
                     }
                 }
 

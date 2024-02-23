@@ -94,6 +94,8 @@ val waitForDatabase = tasks.register("waitForDatabase", Exec::class) {
 
 tasks.named("generatePrimaryDbJooqSchemaSource").configure {
     dependsOn(waitForDatabase)
+    dependsOn("formatKotlin")
+    dependsOn("lintKotlin")
 }
 
 tasks.named("flywayMigrate").configure {
